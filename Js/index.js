@@ -60,10 +60,11 @@ function productCardHTML(product, index = 0) {
     <div class="col product-item wow fadeInUp" data-wow-delay="${(index % 4) * 0.1}s"
          data-product-id="${product._id}" data-default-color="${color}">
       <div class="product-card" style="cursor:pointer;"
-           onclick="window.location.href='./product.html?id=${product._id}'">
+           >
         <div class="product-img-wrapper">
           ${getBadge(product, index)}
-          <button class="btn-wishlist" onclick="event.stopPropagation()">
+          <button class="btn-wishlist"
+           data-product-id="${product._id}" >
             <i class="fa-regular fa-heart"></i>
           </button>
           <img src="${image}" alt="${product.name}"
@@ -78,7 +79,6 @@ function productCardHTML(product, index = 0) {
           <div class="product-price-row">
             ${priceHTML(product)}
             <button class="btn-add-cart"
-                    onclick="event.stopPropagation()"
                     data-product-id="${product._id}"
                     data-color="${color}">
               <i class="fa-solid fa-cart-arrow-down"></i>
@@ -312,9 +312,9 @@ async function loadFeaturedProducts() {
       return `
         <div class="swiper-slide h-auto"
              data-product-id="${p._id}" data-default-color="${color}">
-          <div class="card-product bg-light border-0 text-start card-producct h-100"
+          <div class=" bg-light border-0 text-start card-producct h-100"
                style="cursor:pointer;"
-               onclick="window.location.href='./product.html?id=${p._id}'">
+               >
             <div class="bg-image" style="position:relative;">
               <img src="${image}" class="w-100 d-block" alt="${p.name}"
                    onerror="this.src='./img/placeholder.png'" loading="lazy" />
@@ -326,10 +326,10 @@ async function loadFeaturedProducts() {
               </h6>
               <h5>${p.name}</h5>
               <h4>$${final.toFixed ? final.toFixed(2) : final}</h4>
-              <span class="btn button-cartt w-100 mt-2"
+              <span class="btn button-cartt w-100 mt-2 add-to-cart-btn"
                     data-product-id="${p._id}"
                     data-color="${color}"
-                    onclick="event.stopPropagation()">
+                    >
                 <i class="fa-solid fa-cart-shopping"></i> Add to Cart
               </span>
             </div>

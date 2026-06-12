@@ -47,8 +47,13 @@ export async function updateCartBadge() {
     badge.style.display = count > 0 ? 'flex' : 'none';
   });
 }
+export async function addToCartBackend(productId, color, quantity = 1) {
+  console.log('ADDING', {
+    productId,
+    color,
+    quantity
+  });
 
-async function addToCartBackend(productId, color, quantity = 1) {
   try {
     const data = await cartAPI.add(productId, color, quantity);
     invalidateCart();
@@ -68,13 +73,27 @@ async function addToCartBackend(productId, color, quantity = 1) {
     return false;
   }
 }
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.product-card,.card-producct');
 
+  if (!card) return;
+
+  // Ignore action buttons
+  if (e.target.closest('.btn-add-cart, .btn-wishlist, .add-to-cart-btn')) {
+    return;
+  }
+
+  const productId = card.closest('[data-product-id]')?.dataset.productId;
+
+  if (productId) {
+    window.location.href = `./product.html?id=${productId}`;
+  }
+});
 // ─── Add-to-cart global delegation ──────────────────────────────────────────
 document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.button-cartt, .btn-add-cart:not(.wishlist-add-cart-btn)');
+  const btn = e.target.closest('.btn-add-cart, .button-cartt, .add-to-cart-btn');
   if (!btn) return;
   if (btn.closest('#add-all-to-cart')) return;
-
   // Walk up to the card container that holds data-product-id
   const card = btn.closest(
     '[data-product-id], .product-card, .product-item, ' +
@@ -89,7 +108,7 @@ document.addEventListener('click', async (e) => {
     showToast('Please select a color/variant first');
     return;
   }
-
+  console.log('ADD TO CART CLICKED', { productId, color });
   // On product detail page respect the quantity selector
   let qty = 1;
   const qtyEl = document.getElementById('quantity');
@@ -723,3 +742,10 @@ window.addEventListener('load', () => {
     console.error('[main] init error:', err);
   }
 })();
+
+
+console.log('REGISTERING ADD TO CART LISTENER');
+
+document.addEventListener('click', (e) => {
+  console.log('DOCUMENT CLICK', e.target);
+});

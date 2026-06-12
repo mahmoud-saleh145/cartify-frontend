@@ -11,18 +11,18 @@ const AUTH_KEY = 'cartify_user';
 let currentUser = null;
 
 try {
-  const stored = sessionStorage.getItem(AUTH_KEY);
+  const stored = localStorage.getItem(AUTH_KEY);
   if (stored) currentUser = JSON.parse(stored);
-} catch (_) {}
+} catch (_) { }
 
-export function getUser()      { return currentUser; }
-export function isLoggedIn()   { return !!currentUser; }
-export function isAdmin()      { return currentUser?.role === 'admin'; }
+export function getUser() { return currentUser; }
+export function isLoggedIn() { return !!currentUser; }
+export function isAdmin() { return currentUser?.role === 'admin'; }
 
 function saveUser(user) {
   currentUser = user;
-  if (user) sessionStorage.setItem(AUTH_KEY, JSON.stringify(user));
-  else      sessionStorage.removeItem(AUTH_KEY);
+  if (user) localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+  else localStorage.removeItem(AUTH_KEY);
 }
 
 // ─── Login (magic link / email only) ─────────────────────────────────────────
@@ -34,7 +34,7 @@ export async function login(email) {
 
 // ─── Logout ───────────────────────────────────────────────────────────────────
 export async function logout() {
-  try { await authAPI.logout(); } catch (_) {}
+  try { await authAPI.logout(); } catch (_) { }
   saveUser(null);
   window.location.href = './index.html';
 }

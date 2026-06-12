@@ -206,8 +206,9 @@
   <script src="./Js/bootstrap.min.js"></script>
   <script src="./Js/mdb.umd.min.js"></script>
   <script type="module">
-    import { productsAPI, cartAPI } from './Js/api.js';
     import { updateCartBadge } from './Js/main.js';
+    import { addToCartBackend } from './Js/main.js';   // ← import AFTER statements
+    import { productsAPI, cartAPI } from './Js/api.js';
 
     let selectedColor = '';
     let currentProduct = null;
@@ -348,14 +349,13 @@
     document.getElementById('increase')?.addEventListener('click', () => {
       _qty++; document.getElementById('quantity').textContent = _qty;
     });
-
     // ── Add to Cart — single handler, owned by this inline module ────────
     // We give the button id="add-to-cart-btn" but REMOVE class btn-add-cart
     // so main.js delegation does NOT also fire it.
     // (The class is removed dynamically below after the module loads)
     const atcBtn = document.getElementById('add-to-cart-btn');
     if (atcBtn) {
-      atcBtn.classList.remove('btn-add-cart');   // prevent delegation double-fire
+      atcBtn.classList.remove('btn-add-cart');
       atcBtn.addEventListener('click', async () => {
         if (!currentProduct) return;
         if (!selectedColor) { alert('Please select a color variant.'); return; }
@@ -363,8 +363,6 @@
         atcBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Adding...';
         try {
           const data = await cartAPI.add(currentProduct._id, selectedColor, _qty);
-          console.log(currentProduct);
-          console.log(selectedColor);
           if (data.stockLimitReached) {
             atcBtn.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> Only ${data.available} left`;
           } else {
@@ -383,7 +381,6 @@
         }, 2000);
       });
     }
-
     // ── Related products ─────────────────────────────────────────────────
     async function loadRelated(category, excludeId) {
       const grid = document.getElementById('product-grid');
@@ -400,10 +397,10 @@
           return `
               <div class="col product-item wow fadeInUp" data-wow-delay="${i * 0.1}s"
                    data-product-id="${p._id}" data-default-color="${color}">
-                <div class="product-card" style="cursor:pointer;"
-                     onclick="window.location.href='./product.html?id=${p._id}'">
+                <div class="product-card" style="cursor:pointer;">
                   <div class="product-img-wrapper">
-                    <button class="btn-wishlist" onclick="event.stopPropagation()">
+                    <button class="btn-wishlist" 
+                     data-product-id="${p._id}">
                       <i class="fa-regular fa-heart"></i>
                     </button>
                     <img src="${image}" alt="${p.name}"
@@ -418,7 +415,7 @@
                     <p class="text-muted small">${p.category}</p>
                     <div class="product-price-row">
                       <div class="price">$${price.toFixed ? price.toFixed(2) : price}</div>
-                      <button class="btn-add-cart" onclick="event.stopPropagation()"
+                      <button class="btn-add-cart" 
                               data-product-id="${p._id}" data-color="${color}">
                         <i class="fa-solid fa-cart-arrow-down"></i>
                       </button>

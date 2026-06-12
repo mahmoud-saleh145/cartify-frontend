@@ -304,7 +304,7 @@
               <div class="item-card ${i === 0 ? 'selected' : ''}"
                    onclick="window._selectItem(this)"
                    data-order-id="${item.order._id}"
-                   data-product-id="${item.product.productId}"
+                   data-product-id="${item.product.productId._id}"
                    data-product-name="${name}"
                    data-color="${item.product.color || 'Default'}">
                 <div class="item-img-placeholder">
@@ -400,6 +400,7 @@
       if (selectedOrderId) payload.orderId = selectedOrderId;
 
       try {
+        console.log(payload);
         const data = await returnsAPI.create(payload);
         const rr = data.returnRequest;
 
