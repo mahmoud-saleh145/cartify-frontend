@@ -743,9 +743,3 @@ window.addEventListener('load', () => {
   }
 })();
 
-
-console.log('REGISTERING ADD TO CART LISTENER');
-
-document.addEventListener('click', (e) => {
-  console.log('DOCUMENT CLICK', e.target);
-});
