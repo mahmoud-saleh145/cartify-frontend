@@ -282,6 +282,7 @@
           ['delivered', 'placed', 'confirmed', 'shipping'].includes(o.status)
         );
 
+
         if (loadingEl) loadingEl.style.display = 'none';
 
         if (!orders.length) {
@@ -292,8 +293,19 @@
         // Flatten to individual product items
         const items = [];
         orders.forEach(order => {
-          (order.products || []).forEach(product => items.push({ order, product }));
+          (order.products || []).forEach(product => {
+            console.log(order);
+
+            if (!product.isRefundRequested) {
+              items.push({ order, product });
+            }
+          });
         });
+
+        if (!items.length) {
+          if (noOrdersEl) noOrdersEl.style.display = 'block';
+          return;
+        }
 
         listEl.innerHTML = items.slice(0, 6).map((item, i) => {
           const img = item.product.imageUrl || './img/tablet.png';

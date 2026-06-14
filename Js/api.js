@@ -4,6 +4,7 @@
  */
 
 const API_BASE = 'http://localhost:3001';
+// const API_BASE = 'https://cartify-backend-mqtt.vercel.app';
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 async function apiFetch(endpoint, options = {}) {
